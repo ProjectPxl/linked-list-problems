@@ -174,12 +174,172 @@ void removeDuplicates(Node* head){
   }
 }
 
+// 11. moveNode
+void moveNode(Node** dest, Node** source){
+  assert(source != NULL);
+
+  Node* tmp = (*source)->next;
+  (*source)->next = *dest;
+  *dest = *source;
+  *source = tmp;
+}
+
+// 12. alternatingSplit
+void alternatingSplit(Node** source, Node** evens, Node** odds){
+  if(!*source){
+    return;
+  }
+
+  bool odd = true;
+  Node* curr = *source;
+
+  while(curr){
+    Node* tmp = curr->next;
+    if(odd){
+      moveNode(odds, source);
+    }
+    else{
+      moveNode(evens, source);
+    }
+    curr = tmp;
+    odd = !odd;
+  }
+
+}
+
+// 13. shuffleMerge
+Node* shuffleMerge(Node* a, Node* b){
+  Node dummy;
+  dummy.next = NULL;
+  Node* curr = &dummy;
+
+  while(a && b){
+    curr->next = a;
+    curr = a;
+    a = a->next;
+
+    curr->next = b;
+    curr = b;
+    b = b->next;
+  }
+
+  if(!a){
+    curr->next = b;
+  }
+
+  if(!b){
+    curr->next = a;
+  }
+
+  return dummy.next;
+}
+
+// 14. sortedMerge
+Node* sortedMerge(Node* a, Node* b){
+  Node d;
+  d.next     = NULL;
+  Node* curr = &d;
+
+  while(a && b){
+    if(a->data < b->data){
+      curr->next = a;
+      curr = a;
+      a = a->next;
+    }
+    else{
+      curr->next = b;
+      curr = b;
+      b = b->next;
+    }
+  }
+
+  if(!a){
+    curr->next = b;
+  }
+
+  if(!b){
+    curr->next = a;
+  }
+
+  return d.next;
+}
+
+// 15. mergeSort
+void mergeSort(Node** head){
+  if(!*head || !(*head)->next){
+    return;
+  }
+  Node* a, *b;
+  frontBackSplit(&(*head), &a, &b);
+  mergeSort(&a);
+  mergeSort(&b);
+  (*head) = sortedMerge(a, b);
+}
+
+// 16. sortedIntersect
+Node* sortedIntersect(Node* a, Node* b){
+  Node d = {-1, NULL};
+  Node* curr = &d;
+  while(a && b){
+    if(a->data < b->data){
+      a = a->next;
+    }
+    else if(b->data < a->data){
+      b = b->next;
+    }
+    else{
+      Node* newNode = (Node*)malloc(sizeof(Node));
+      newNode->data = a->data;
+      newNode->next = NULL;
+      curr->next    = newNode;
+      curr = newNode;
+      a    = a->next;
+      b    = b->next;
+    }
+  }
+  return d.next;
+}
+
+// 17. reverse
+void reverse(Node** head){
+  if(!*head){
+    return;
+  }
+  Node* prev = NULL; 
+  Node *curr = *head;
+
+  while(curr){
+    Node* tmp = curr->next;
+    curr->next = prev;
+    prev = curr;
+    curr = tmp;
+  }
+  *head = prev;
+}
+
+// 18. recursiveReverse
+void recursiveReverse(Node** head){
+  if(!*head || !(*head)->next){
+    return;
+  }
+
+  Node* tmp = (*head)->next;
+
+  recursiveReverse(&tmp);
+  (*head)->next->next = *head;
+  (*head)->next = NULL;
+
+  *head = tmp;
+}
+
 int main(){
   Node* head = NULL;
-  addNode(&head, 0);
-  addNode(&head, 1);
-  addNode(&head, 2);
+  addNode(&head, 6);
+  addNode(&head, 5);
+  addNode(&head, 4);
   addNode(&head, 3);
+  addNode(&head, 2);
+
   // insertNth(&head, 0, 0);
 
   // === test for #6 ====

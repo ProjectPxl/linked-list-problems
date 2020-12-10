@@ -30,8 +30,10 @@ bool addNode(Node** head, int data){
 
 void traverseList(Node* head){
   Node* curr = head;
+  printf("%s: ", "Traversing");
   while(curr){
-    printf("%d\n", curr->data);
+    printf("%d, ", curr->data);
     curr = curr->next;
   }
+  printf("\n \n");
 }
